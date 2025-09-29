@@ -14,11 +14,13 @@ function Home() {
   const [regCode, setRegCode] = useState('');
   const [sentCode, setSentCode] = useState('');
   const [regErrorMsg, setRegErrorMsg] = useState('');
+  const [regSuccessMsg, setRegSuccessMsg] = useState(''); // ✅ 註冊成功訊息
 
   // 登入狀態
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginErrorMsg, setLoginErrorMsg] = useState('');
+  const [loginSuccessMsg, setLoginSuccessMsg] = useState('');
 
   const containerStyle = {
     minHeight: '100vh',
@@ -70,7 +72,7 @@ function Home() {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '120px 50px 50px' // 上方留空給固定 header
+    padding: '120px 50px 50px'
   };
 
   const contentStyle = {
@@ -119,14 +121,19 @@ function Home() {
     }
     users.push({ username: regUsername, password: regPassword, email: regEmail });
     localStorage.setItem('registeredUsers', JSON.stringify(users));
-    alert('註冊成功！即將跳轉到登入頁面');
-    setShowRegisterModal(false);
-    setRegUsername('');
-    setRegPassword('');
-    setRegEmail('');
-    setRegCode('');
-    setRegErrorMsg('');
-    setShowLoginModal(true);
+
+    // ✅ 顯示註冊成功訊息，不用 alert
+    setRegSuccessMsg('註冊成功！即將跳轉到登入頁面...');
+    setTimeout(() => {
+      setShowRegisterModal(false);
+      setShowLoginModal(true);
+      setRegUsername('');
+      setRegPassword('');
+      setRegEmail('');
+      setRegCode('');
+      setRegErrorMsg('');
+      setRegSuccessMsg('');
+    }, 2000); // 2 秒後自動跳轉到登入
   };
 
   // 發送驗證碼
@@ -151,12 +158,13 @@ function Home() {
       user => user.username === loginUsername && user.password === loginPassword
     );
     if (user) {
-      alert(`登入成功！歡迎 ${loginUsername}`);
+      localStorage.setItem('username', loginUsername);
+      setLoginSuccessMsg(`登入成功！歡迎 ${loginUsername}`);
       setShowLoginModal(false);
       setLoginUsername('');
       setLoginPassword('');
       setLoginErrorMsg('');
-      navigate('/dashboard');
+      navigate('/first');
     } else {
       setLoginErrorMsg('使用者名稱或密碼錯誤');
     }
@@ -164,9 +172,9 @@ function Home() {
 
   // 訪客登入
   const handleGuestLogin = () => {
-    alert('以訪客身份登入');
+    setLoginSuccessMsg('以訪客身份登入');
     setShowLoginModal(false);
-    navigate('/dashboard1');
+    navigate('/Visitors');
   };
 
   return (
@@ -253,6 +261,11 @@ function Home() {
               </button>
             </div>
             {regErrorMsg && <p style={{ color: 'red' }}>{regErrorMsg}</p>}
+            {regSuccessMsg && (
+              <p style={{ color: 'green', fontWeight: 'bold', marginTop: '10px' }}>
+                {regSuccessMsg}
+              </p>
+            )}
             <button
               style={{ ...registerButton, width: '50%', marginTop: '10px' }}
               onClick={handleRegister}
@@ -282,6 +295,19 @@ function Home() {
               onChange={(e) => setLoginPassword(e.target.value)}
               style={{ width: '80%', padding: '8px', margin: '10px 0' }}
             />
+            {loginSuccessMsg && (
+              <div style={{
+                backgroundColor: 'rgba(0, 128, 0, 0.1)',
+                color: 'green',
+                padding: '10px',
+                margin: '20px auto',
+                borderRadius: '6px',
+                width: 'fit-content',
+                fontWeight: 'bold'
+              }}>
+                {loginSuccessMsg}
+              </div>
+            )}
             {loginErrorMsg && <p style={{ color: 'red' }}>{loginErrorMsg}</p>}
             <button
               style={{ ...loginButton, width: '50%', marginTop: '10px' }}

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import bgImg from './components/background.jpg';
 
 export default function Analysis() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { resumeFile, resumeText } = location.state || {};
   const [analysisResult, setAnalysisResult] = useState(null);
 
@@ -20,6 +21,16 @@ export default function Analysis() {
     setAnalysisResult(result);
   };
 
+  // 共用按鈕樣式
+  const navBtnStyle = {
+    padding: "10px 20px",
+    background: "#1c0be0ff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer"
+  };
+
   return (
     <div
       style={{
@@ -28,7 +39,7 @@ export default function Analysis() {
         backgroundImage: `url(${bgImg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        paddingTop: '120px', // 留給固定標題的高度
+        paddingTop: '120px',
         boxSizing: 'border-box',
       }}
     >
@@ -68,8 +79,6 @@ export default function Analysis() {
           </div>
         )}
 
-        
-
         {/* 優缺點分析 */}
         {analysisResult && (
           <div>
@@ -86,6 +95,11 @@ export default function Analysis() {
             ) : <p>暫無缺點分析</p>}
           </div>
         )}
+
+        {/* 頁面導航按鈕 */}
+        <div style={{ display:'flex', justifyContent:'center', gap:'30px', marginTop:'40px' }}>
+          <button onClick={()=>navigate('/visitors')} style={navBtnStyle}>← 上一步</button>
+        </div>
       </div>
     </div>
   );

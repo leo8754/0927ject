@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FileUpload from './components/FileUpload';
 import ResumePreview from './components/ResumePreview';
 import bgImg from './components/background.jpg';
@@ -12,7 +12,20 @@ export default function Dashboard() {
   const [resumeFile, setResumeFile] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [username, setUsername] = useState('');
+  const [status, setStatus] = useState('在線'); // 預設顯示 "在線"
   const navigate = useNavigate();
+
+  // 讀取登入者名稱
+  useEffect(() => {
+    const savedUser = localStorage.getItem('username');
+    if (savedUser) {
+      setUsername(savedUser);
+      setStatus('在線');
+    } else {
+      setUsername('');
+    }
+  }, []);
 
   // Word → PDF
   const convertDocxToPDF = async (file) => {
@@ -68,6 +81,24 @@ export default function Dashboard() {
     navigate('/analysis1', { state: { resumeFile: pdfFile, resumeText } });
   };
 
+  // 登出
+  const handleLogout = () => {
+    localStorage.removeItem('username');
+    setStatus('離線');
+    setUsername('');
+    navigate('/');
+  };
+
+  // 共用按鈕樣式
+  const navBtnStyle = {
+    padding: "10px 20px",
+    background: "#200ae8ff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer"
+  };
+
   return (
     <div
       style={{
@@ -92,13 +123,38 @@ export default function Dashboard() {
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
           zIndex: 100,
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           alignItems: 'center'
         }}
       >
         <h1 style={{ margin: 0, color: '#8B4513', fontWeight: '700', fontSize: '2.5rem' }}>
           AI 履歷健診
         </h1>
+
+        {/* 登入者資訊 + 登出按鈕 */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginRight: '40px' }}>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontWeight: '600' }}>
+              使用者：{username || "訪客登入"}
+            </div>
+            <div style={{ fontSize: '0.9rem', color: status === '在線' ? 'green' : 'gray' }}>
+              狀態：{status}
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: "8px 16px",
+              background: "#dc3545",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer"
+            }}
+          >
+            登出
+          </button>
+        </div>
       </div>
 
       {/* 主內容 */}
@@ -147,6 +203,11 @@ export default function Dashboard() {
               提交履歷
             </button>
           </div>
+        </div>
+
+        {/* 頁面導航按鈕 */}
+        <div style={{ display:'flex', justifyContent:'center', gap:'30px', marginTop:'40px' }}>
+          <button onClick={()=>navigate('/')} style={navBtnStyle}>← 上一步</button>
         </div>
 
         {/* 預覽 Modal */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import bgImg from './components/background.jpg';
 import * as pdfjsLib from 'pdfjs-dist';
 
@@ -8,6 +8,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs
 
 export default function Analysis() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { resumeFile: initialFile, resumeText: initialText } = location.state || {};
   const [resumeFile, setResumeFile] = useState(initialFile || null);
   const [resumeText, setResumeText] = useState(initialText || '');
@@ -54,7 +55,7 @@ export default function Analysis() {
       }
     };
     analyze();
-  }, [resumeFile]);
+  }, [resumeFile, initialText]);
 
   return (
     <div
@@ -104,8 +105,6 @@ export default function Analysis() {
           </div>
         )}
 
-       
-
         {/* 優缺點分析 */}
         {analysisResult && (
           <div>
@@ -122,7 +121,24 @@ export default function Analysis() {
             ) : <p>暫無缺點分析</p>}
           </div>
         )}
+
+        {/* 頁面導航按鈕 */}
+        <div style={{ display:'flex', justifyContent:'center', gap:'30px', marginTop:'40px' }}>
+          <button onClick={()=>navigate('/Upload')} style={navBtnStyle}>← 上一步</button>
+        </div>
       </div>
     </div>
   );
 }
+
+// 樣式統一化
+const navBtnStyle = {
+  padding: '10px 20px',
+  background: '#007bff',
+  color: 'white',
+  border: 'none',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  fontSize: '1rem',
+  fontWeight: '600'
+};

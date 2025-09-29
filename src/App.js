@@ -1,11 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './Home';
-import Login from './Login';
-import Dashboard from './Dashboard'; // 原本的 App.js
-import Dashboard1 from './Dashboard1'; 
+
+import Visitors from './Visitors'; 
 import Analysis from './Analysis';
 import Analysis1 from './Analysis1';
+import First from './First';
+import FormPage from './FormPage';
+import FormPage1 from './FormPage1';
+import Upload from './Upload';
+
 import ProfileForm from './components/ProfileForm';
 
 function App() {
@@ -15,12 +19,13 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard1" element={<Dashboard1 />} />
-        <Route 
-          path="/dashboard" 
-          element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />} 
-        />
+        
+        <Route path="/Visitors" element={<Visitors />} />
+        
+        <Route path="/First" element={<First />} />
+        <Route path="/FormPage" element={<FormPage />} />
+        <Route path="/FormPage1" element={<FormPage1 />} />
+        <Route path="/Upload" element={<Upload />} />
         <Route path="/analysis" element={<Analysis />} />
         <Route path="/analysis1" element={<Analysis1 />} />
       </Routes>
