@@ -9,6 +9,7 @@ import First from './First';
 import FormPage from './FormPage';
 import FormPage1 from './FormPage1';
 import Upload from './Upload';
+import Register from './pages/Register';
 
 import ProfileForm from './components/ProfileForm';
 
@@ -28,6 +29,8 @@ function App() {
         <Route path="/Upload" element={<Upload />} />
         <Route path="/analysis" element={<Analysis />} />
         <Route path="/analysis1" element={<Analysis1 />} />
+        <Route path="/register" element={<Register />} />
+
       </Routes>
     </Router>
   );

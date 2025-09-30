@@ -8,13 +8,13 @@ function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   // 註冊狀態
-  const [regUsername, setRegUsername] = useState('');
-  const [regPassword, setRegPassword] = useState('');
-  const [regEmail, setRegEmail] = useState('');
-  const [regCode, setRegCode] = useState('');
-  const [sentCode, setSentCode] = useState('');
-  const [regErrorMsg, setRegErrorMsg] = useState('');
-  const [regSuccessMsg, setRegSuccessMsg] = useState(''); // ✅ 註冊成功訊息
+ // const [regUsername, setRegUsername] = useState('');
+ // const [regPassword, setRegPassword] = useState('');
+ // const [regEmail, setRegEmail] = useState('');
+ // const [regCode, setRegCode] = useState('');
+ // const [sentCode, setSentCode] = useState('');
+ // const [regErrorMsg, setRegErrorMsg] = useState('');
+ // const [regSuccessMsg, setRegSuccessMsg] = useState(''); // ✅ 註冊成功訊息
 
   // 登入狀態
   const [loginUsername, setLoginUsername] = useState('');
@@ -200,8 +200,10 @@ function Home() {
         {/* 登入/註冊在右上 */}
         <div style={{ marginLeft: 'auto' }}>
           <button style={loginButton} onClick={() => setShowLoginModal(true)}>登入</button>
-          <button style={registerButton} onClick={() => setShowRegisterModal(true)}>註冊</button>
+          
+          <button style={registerButton} onClick={() => navigate('/register')}>註冊</button>
         </div>
+
       </header>
 
       {/* Main Content */}
@@ -222,59 +224,7 @@ function Home() {
         </div>
       </main>
 
-      {/* Register Modal */}
-      {showRegisterModal && (
-        <div style={modalOverlayStyle} onClick={() => setShowRegisterModal(false)}>
-          <div style={modalContentStyle} onClick={(e) => e.stopPropagation()}>
-            <h2>註冊</h2>
-            <input
-              type="text"
-              placeholder="使用者名稱"
-              value={regUsername}
-              onChange={(e) => setRegUsername(e.target.value)}
-              style={{ width: '80%', padding: '8px', margin: '10px 0' }}
-            />
-            <input
-              type="password"
-              placeholder="密碼"
-              value={regPassword}
-              onChange={(e) => setRegPassword(e.target.value)}
-              style={{ width: '80%', padding: '8px', margin: '10px 0' }}
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              value={regEmail}
-              onChange={(e) => setRegEmail(e.target.value)}
-              style={{ width: '80%', padding: '8px', margin: '10px 0' }}
-            />
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0' }}>
-              <input
-                type="text"
-                placeholder="驗證碼"
-                value={regCode}
-                onChange={(e) => setRegCode(e.target.value)}
-                style={{ width: '50%', padding: '8px', marginRight: '10px' }}
-              />
-              <button onClick={sendVerificationCode} style={{ ...registerButton, padding: '8px 12px' }}>
-                發送驗證碼
-              </button>
-            </div>
-            {regErrorMsg && <p style={{ color: 'red' }}>{regErrorMsg}</p>}
-            {regSuccessMsg && (
-              <p style={{ color: 'green', fontWeight: 'bold', marginTop: '10px' }}>
-                {regSuccessMsg}
-              </p>
-            )}
-            <button
-              style={{ ...registerButton, width: '50%', marginTop: '10px' }}
-              onClick={handleRegister}
-            >
-              提交
-            </button>
-          </div>
-        </div>
-      )}
+
 
       {/* Login Modal */}
       {showLoginModal && (
