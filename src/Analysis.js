@@ -91,7 +91,7 @@ export default function Analysis() {
         borderRadius: '12px',
         padding: '20px',
         maxWidth: '900px',
-        margin: '0 auto 40px auto',
+        margin: '0 auto 80px auto',
       }}>
         {/* PDF 預覽 */}
         {resumeFile && (
@@ -127,6 +127,11 @@ export default function Analysis() {
           <button onClick={()=>navigate('/Upload')} style={navBtnStyle}>← 上一步</button>
         </div>
       </div>
+
+      {/* Footer 固定在最下方 */}
+      <footer style={footerStyle}>
+        2025 程式驅動 AI 履歷健診團隊 版權所有 | 聯絡我們: contact@airesume.com
+      </footer>
     </div>
   );
 }
@@ -141,4 +146,18 @@ const navBtnStyle = {
   cursor: 'pointer',
   fontSize: '1rem',
   fontWeight: '600'
+};
+
+const footerStyle = {
+  position: 'fixed',
+  bottom: 0,
+  left: 0,
+  width: '100%',
+  textAlign: 'center',
+  padding: '15px 10px',
+  background: 'rgba(255,255,255,0.9)',
+  borderTop: '1px solid #ddd',
+  fontSize: '0.9rem',
+  color: '#555',
+  zIndex: 99
 };

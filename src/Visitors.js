@@ -13,21 +13,21 @@ export default function Dashboard() {
   const [pdfFile, setPdfFile] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [username, setUsername] = useState('');
-  const [status, setStatus] = useState('在線'); // 預設顯示 "在線"
+  const [status, setStatus] = useState('在線');
   const navigate = useNavigate();
 
-  // 讀取登入者名稱
+  // 初始化使用者
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
     if (savedUser) {
       setUsername(savedUser);
       setStatus('在線');
     } else {
-      setUsername('');
+      setStatus('離線');
     }
   }, []);
 
-  // Word → PDF
+  // Word 轉 PDF
   const convertDocxToPDF = async (file) => {
     const arrayBuffer = await file.arrayBuffer();
     const { value: html } = await mammoth.convertToHtml({ arrayBuffer });
@@ -58,7 +58,7 @@ export default function Dashboard() {
     setPdfFile(pdfFile);
   };
 
-  // 上傳檔案
+  // 處理檔案上傳
   const handleFileUpload = async (file, text) => {
     setResumeText(text);
     if (file.name.endsWith(".doc") || file.name.endsWith(".docx")) {
@@ -72,7 +72,7 @@ export default function Dashboard() {
     }
   };
 
-  // 提交履歷 → 跳到分析頁
+  // 提交履歷
   const handleSubmit = () => {
     if (!pdfFile) {
       alert("請先上傳履歷！");
@@ -89,7 +89,6 @@ export default function Dashboard() {
     navigate('/');
   };
 
-  // 共用按鈕樣式
   const navBtnStyle = {
     padding: "10px 20px",
     background: "#200ae8ff",
@@ -98,6 +97,19 @@ export default function Dashboard() {
     borderRadius: "8px",
     cursor: "pointer"
   };
+
+  const footerStyle = {
+    marginTop: '40px',
+    padding: '20px 0',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    textAlign: 'center',
+    fontSize: '0.9em',
+    color: '#6F4E37',
+    borderRadius: '8px'
+  };
+
+  // 頭像顏色
+  const avatarColor = '#007bff';
 
   return (
     <div
@@ -131,29 +143,55 @@ export default function Dashboard() {
           AI 履歷健診
         </h1>
 
-        {/* 登入者資訊 + 登出按鈕 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginRight: '40px' }}>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontWeight: '600' }}>
-              使用者：{username || "訪客登入"}
-            </div>
-            <div style={{ fontSize: '0.9rem', color: status === '在線' ? 'green' : 'gray' }}>
-              狀態：{status}
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
+        {/* 右上角頭像 + 狀態 + 回首頁按鈕 */}
+        <div style={{
+          position: 'absolute',
+          top: '20px',
+          right: '80px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px'
+        }}>
+          {/* 頭像 */}
+          <div
             style={{
-              padding: "8px 16px",
-              background: "#dc3545",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer"
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              backgroundColor: avatarColor,
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "bold",
+              fontSize: "18px",
             }}
           >
-            登出
-          </button>
+            {username ? username.charAt(0).toUpperCase() : "👤"}
+          </div>
+
+          {/* 使用者資訊 + 登出 */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginRight: '40px' }}>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontWeight: '600' }}>{"訪客登入"}</div>
+              <div style={{fontSize:'0.9rem', color:'green' }}>
+                <b>狀態：在線</b>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: "8px 16px",
+                background: "#dc3545",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer"
+              }}
+            >
+              登出
+            </button>
+          </div>
         </div>
       </div>
 
@@ -206,9 +244,14 @@ export default function Dashboard() {
         </div>
 
         {/* 頁面導航按鈕 */}
-        <div style={{ display:'flex', justifyContent:'center', gap:'30px', marginTop:'40px' }}>
-          <button onClick={()=>navigate('/')} style={navBtnStyle}>← 上一步</button>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '40px' }}>
+          <button onClick={() => navigate('/')} style={navBtnStyle}>← 上一步</button>
         </div>
+
+        {/* Footer */}
+        <footer style={footerStyle}>
+          2025 程式驅動 AI 履歷健診團隊 版權所有 | 聯絡我們: contact@airesume.com
+        </footer>
 
         {/* 預覽 Modal */}
         {showPreview && pdfFile && (
