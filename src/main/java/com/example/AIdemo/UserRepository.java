@@ -16,4 +16,7 @@ Optional<User> findByEmailOrPhone(String email, String phone);
     // Optional<User> findByEmailOrPhone(String email, String phone); // 雖然可用，但用 exists 性能更好
 
 Optional<User> findByEmailVerificationCode(String code);
+
+Optional<User> findByEmail(String email);
+
 }

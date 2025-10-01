@@ -105,47 +105,109 @@ function Home() {
   };
 
   // 註冊
-  const handleRegister = () => {
-    if (!regUsername || !regPassword || !regEmail || !regCode) {
-      setRegErrorMsg('請完整填寫所有欄位');
-      return;
-    }
-    if (regCode !== sentCode) {
-      setRegErrorMsg('驗證碼錯誤');
-      return;
-    }
-    const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
-    if (users.some(user => user.username === regUsername)) {
-      setRegErrorMsg('此使用者已註冊');
-      return;
-    }
-    users.push({ username: regUsername, password: regPassword, email: regEmail });
-    localStorage.setItem('registeredUsers', JSON.stringify(users));
+//  const handleRegister = () => {
+//    if (!regUsername || !regPassword || !regEmail || !regCode) {
+//      setRegErrorMsg('請完整填寫所有欄位');
+//      return;
+//    }
+//    if (regCode !== sentCode) {
+//      setRegErrorMsg('驗證碼錯誤');
+//      return;
+//    }
+//    const users = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+//    if (users.some(user => user.username === regUsername)) {
+//      setRegErrorMsg('此使用者已註冊');
+//      return;
+//    }
+//    users.push({ username: regUsername, password: regPassword, email: regEmail });
+//    localStorage.setItem('registeredUsers', JSON.stringify(users));
+//
+//    // ✅ 顯示註冊成功訊息，不用 alert
+//    setRegSuccessMsg('註冊成功！即將跳轉到登入頁面...');
+//    setTimeout(() => {
+//      setShowRegisterModal(false);
+//      setShowLoginModal(true);
+//      setRegUsername('');
+//      setRegPassword('');
+//      setRegEmail('');
+//      setRegCode('');
+//      setRegErrorMsg('');
+//      setRegSuccessMsg('');
+//    }, 2000); // 2 秒後自動跳轉到登入
+//  };
 
-    // ✅ 顯示註冊成功訊息，不用 alert
-    setRegSuccessMsg('註冊成功！即將跳轉到登入頁面...');
+
+//註冊
+const handleRegister = async () => {
+  if (!regUsername || !regPassword || !regEmail || !regCode) {
+    setRegErrorMsg('請完整填寫所有欄位');
+    return;
+  }
+  if (regCode !== sentCode) {
+    setRegErrorMsg('驗證碼錯誤');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: regUsername,
+        email: regEmail,
+        password: regPassword,
+        phone: regPhone,
+        selectedPosition: regPosition
+      })
+    });
+
+    const result = await response.text();
+    setRegSuccessMsg(result); // 顯示後端回傳訊息
+
     setTimeout(() => {
       setShowRegisterModal(false);
       setShowLoginModal(true);
-      setRegUsername('');
-      setRegPassword('');
-      setRegEmail('');
-      setRegCode('');
-      setRegErrorMsg('');
-      setRegSuccessMsg('');
-    }, 2000); // 2 秒後自動跳轉到登入
-  };
+    }, 2000);
+  } catch (error) {
+    setRegErrorMsg('註冊失敗，請稍後再試');
+  }
+};
+
+
 
   // 發送驗證碼
-  const sendVerificationCode = () => {
-    if (!regEmail) {
-      setRegErrorMsg('請輸入 Email');
-      return;
-    }
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setSentCode(code);
-    alert(`驗證碼已寄送至 ${regEmail}\n(測試用代碼: ${code})`);
-  };
+//  const sendVerificationCode = () => {
+//    if (!regEmail) {
+//      setRegErrorMsg('請輸入 Email');
+//      return;
+//    }
+//    const code = Math.floor(100000 + Math.random() * 900000).toString();
+//    setSentCode(code);
+//    alert(`驗證碼已寄送至 ${regEmail}\n(測試用代碼: ${code})`);
+//  };
+
+
+//發送驗證碼
+//const sendVerificationCode = async () => {
+//  if (!regEmail) {
+//    setRegErrorMsg('請輸入 Email');
+//    return;
+//  }
+//
+//  try {
+//    const response = await fetch('/api/send-code', {
+//      method: 'POST',
+//      headers: { 'Content-Type': 'application/json' },
+//      body: JSON.stringify({ email: regEmail })
+//    });
+//    const result = await response.text();
+//    alert(result); // 顯示後端回傳訊息
+//  } catch (error) {
+//    setRegErrorMsg('驗證碼寄送失敗');
+//  }
+//};
+
+
 
   // 登入
   const handleLogin = () => {

@@ -12,12 +12,13 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendVerificationEmail(String to, String code) {
-        String verifyUrl = "http://localhost:8080/api/verify?code=" + code;
 
         SimpleMailMessage message = new SimpleMailMessage();
+
         message.setTo(to);
         message.setSubject("感謝您使用 欸! 愛履歷,請驗證你的 Email");
-        message.setText("請點擊以下連結完成驗證：\n" + verifyUrl);
+        message.setText("您的驗證碼是：" + code);
+
 
         mailSender.send(message);
     }

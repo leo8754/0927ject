@@ -13,11 +13,15 @@ function RegisterForm() {
   const [phone, setPhone] = useState('');
   const [selectedPosition, setSelectedPosition] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [sentCode, setSentCode] = useState('');
+  //const [sentCode, setSentCode] = useState('');
   const [captchaInput, setCaptchaInput] = useState('');
   const [simpleCaptcha, setSimpleCaptcha] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [codeMsg, setCodeMsg] = useState('');
+  const [registerMsg, setRegisterMsg] = useState('');
+
 
   useEffect(() => {
     generateCaptcha();
@@ -28,29 +32,46 @@ function RegisterForm() {
     setSimpleCaptcha(code);
   };
 
-  const sendCode = () => {
+  //Email認證
+  const sendCode = async () => {
     if (!email) {
       setErrorMsg('請輸入 Email');
       return;
     }
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setSentCode(code);
-    alert(`驗證碼已寄送至 ${email}\n（測試用代碼：${code}）`);
+      setIsSending(true); // 開始 loading
+      setErrorMsg('');
+      setSuccessMsg('');
+
+    try {
+      const res = await fetch('/api/send-verification-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const text = await res.text();
+      setSuccessMsg(text);
+    } catch (err) {
+      setErrorMsg('發送驗證碼失敗');
+    }finally {
+    setIsSending(false);
+    }
   };
+  
+
 
   const handleSubmit = async () => {
-    if (!name || !email || !password || !phone || !verificationCode || !captchaInput) {
+    if (!name || !email || !password || !phone  || !captchaInput) {
       setErrorMsg('請完整填寫所有欄位');
-      return;
-    }
-    if (verificationCode !== sentCode) {
-      setErrorMsg('Email 驗證碼錯誤');
       return;
     }
     if (captchaInput.trim() !== simpleCaptcha) {
       setErrorMsg('驗證碼錯誤');
       return;
+    }if (!verificationCode) {
+    setErrorMsg('請輸入 Email 驗證碼');
+    return;
     }
+
 
     const encryptedPassword = CryptoJS.SHA256(password).toString();
 
@@ -60,11 +81,23 @@ function RegisterForm() {
         email,
         password: encryptedPassword,
         phone,
-        selected_position: selectedPosition,
-        verification_code: verificationCode
+        selectedPosition,
+        emailVerificationCode: verificationCode
       });
       setSuccessMsg('註冊成功！即將跳轉...');
-      setTimeout(() => navigate('/'), 2000);
+
+      //清空表單
+      
+      setName('');
+      setEmail('');
+      setPassword('');
+      setPhone('');
+      setSelectedPosition('');
+      setVerificationCode('');
+      setCaptchaInput('');
+      generateCaptcha(); // 重新產生前端驗證碼
+
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
     const text = await err.response?.text?.(); // 抓後端回傳的錯誤訊息
     setErrorMsg(text || '後端錯誤或資料不合法');
@@ -80,14 +113,7 @@ function RegisterForm() {
       <input placeholder="手機號碼" value={phone} onChange={e => setPhone(e.target.value)} />
       <PositionSelect value={selectedPosition} onChange={setSelectedPosition} />
 
-      <div className="verify-block">
-        <input
-          placeholder="Email 驗證碼"
-          value={verificationCode}
-          onChange={e => setVerificationCode(e.target.value)}
-        />
-        <button onClick={sendCode}>發送驗證碼</button>
-      </div>
+
 
       {/* ✅ 純文字驗證碼區塊 */}
       <div className="captcha-block" style={{ marginTop: '12px' }}>
@@ -101,6 +127,21 @@ function RegisterForm() {
         <button onClick={generateCaptcha} style={{ marginTop: '8px' }}>重新產生驗證碼</button>
       </div>
 
+      <div style={{ marginTop: '12px' }}>
+      <input
+      placeholder="請輸入 Email 驗證碼"
+      value={verificationCode}
+      onChange={e => setVerificationCode(e.target.value)}
+      style={{ marginBottom: '8px' }}
+      />
+
+      <button type="button" onClick={sendCode} disabled={isSending}>
+      {isSending ? '寄送中...' : '發送驗證碼到 Email'}
+      </button>
+
+      </div>
+
+
       {errorMsg && <p className="error">{errorMsg}</p>}
       {successMsg && <p className="success">{successMsg}</p>}
 
@@ -108,5 +149,4 @@ function RegisterForm() {
     </div>
   );
 }
-
 export default RegisterForm;

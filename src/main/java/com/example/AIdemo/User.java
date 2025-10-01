@@ -18,6 +18,8 @@ public class User {
     @JdbcTypeCode(Types.CHAR) 
     @Column(columnDefinition = "char(36)")
 
+
+    
     private UUID id;
 
     private String name;
@@ -26,6 +28,7 @@ public class User {
     private String phone;
     private String selectedPosition;
     private boolean emailVerified = false;
+    @Column(name = "verification_code",length = 10)
     private String emailVerificationCode;
     private String role = "user";
 
@@ -89,6 +92,5 @@ public void setRole(String role) {
 }
 
 }
-
 
 
