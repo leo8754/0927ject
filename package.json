@@ -2,6 +2,7 @@
   "name": "resume-ai-demo",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://你的GitHub帳號.github.io/你的repo名稱",
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",
     "framer-motion": "^12.23.21",
@@ -20,7 +21,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@babel/plugin-transform-class-properties": "^7.x.x",
