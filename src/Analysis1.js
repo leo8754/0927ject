@@ -103,8 +103,8 @@ export default function Analysis() {
         </div>
       </div>
 
-      {/* Footer 固定在最下方 */}
-      <footer style={footerStyle}>
+      {/* Footer */}
+      <footer id="contact" style={footerStyle}>
         2025 程式驅動 AI 履歷健診團隊 版權所有 | 聯絡我們: contact@airesume.com
       </footer>
     </div>
