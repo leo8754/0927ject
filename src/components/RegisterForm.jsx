@@ -97,7 +97,7 @@ function RegisterForm() {
       setCaptchaInput('');
       generateCaptcha(); // 重新產生前端驗證碼
 
-      setTimeout(() => navigate('/login'), 2000);
+      setTimeout(() => navigate('/'), 2000);
     } catch (err) {
     const text = await err.response?.text?.(); // 抓後端回傳的錯誤訊息
     setErrorMsg(text || '後端錯誤或資料不合法');

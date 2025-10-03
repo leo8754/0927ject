@@ -24,7 +24,7 @@ export default function Analysis() {
   // 共用按鈕樣式
   const navBtnStyle = {
     padding: "10px 20px",
-    background: "#1c0be0ff",
+    background: "#6F4E37",
     color: "#fff",
     border: "none",
     borderRadius: "8px",
@@ -40,6 +40,7 @@ export default function Analysis() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         paddingTop: '120px',
+        paddingBottom: '80px', // 預留 footer 空間
         boxSizing: 'border-box',
       }}
     >
@@ -101,6 +102,25 @@ export default function Analysis() {
           <button onClick={()=>navigate('/visitors')} style={navBtnStyle}>← 上一步</button>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer id="contact" style={footerStyle}>
+        2025 程式驅動 AI 履歷健診團隊 版權所有 | 聯絡我們: contact@airesume.com
+      </footer>
     </div>
   );
 }
+
+const footerStyle = {
+  position: 'fixed',
+  bottom: 0,
+  left: 0,
+  width: '100%',
+  textAlign: 'center',
+  padding: '15px 10px',
+  background: 'rgba(255,255,255,0.9)',
+  borderTop: '1px solid #ddd',
+  fontSize: '0.9rem',
+  color: '#555',
+  zIndex: 99
+};

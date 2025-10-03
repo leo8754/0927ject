@@ -71,6 +71,21 @@
   		<artifactId>commons-codec</artifactId>
   		<version>1.15</version>
 		</dependency>
+
+		<!-- PDFBox：解析 PDF -->
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox</artifactId>
+		    <version>2.0.29</version>
+		</dependency>
+		
+		<!-- Apache POI：解析 DOCX -->
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>5.2.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

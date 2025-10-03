@@ -13,21 +13,19 @@ export default function Dashboard() {
   const [pdfFile, setPdfFile] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [username, setUsername] = useState('');
-  const [status, setStatus] = useState('在線'); // 預設顯示 "在線"
+  const [status, setStatus] = useState('在線');
   const navigate = useNavigate();
 
-  // 讀取登入者名稱
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
     if (savedUser) {
       setUsername(savedUser);
       setStatus('在線');
     } else {
-      setUsername('');
+      setStatus('離線');
     }
   }, []);
 
-  // Word → PDF
   const convertDocxToPDF = async (file) => {
     const arrayBuffer = await file.arrayBuffer();
     const { value: html } = await mammoth.convertToHtml({ arrayBuffer });
@@ -58,7 +56,6 @@ export default function Dashboard() {
     setPdfFile(pdfFile);
   };
 
-  // 上傳檔案
   const handleFileUpload = async (file, text) => {
     setResumeText(text);
     if (file.name.endsWith(".doc") || file.name.endsWith(".docx")) {
@@ -72,7 +69,6 @@ export default function Dashboard() {
     }
   };
 
-  // 提交履歷 → 跳到分析頁
   const handleSubmit = () => {
     if (!pdfFile) {
       alert("請先上傳履歷！");
@@ -81,7 +77,6 @@ export default function Dashboard() {
     navigate('/analysis1', { state: { resumeFile: pdfFile, resumeText } });
   };
 
-  // 登出
   const handleLogout = () => {
     localStorage.removeItem('username');
     setStatus('離線');
@@ -89,31 +84,33 @@ export default function Dashboard() {
     navigate('/');
   };
 
-  // 共用按鈕樣式
   const navBtnStyle = {
     padding: "10px 20px",
-    background: "#200ae8ff",
+    background: "#6F4E37",
     color: "#fff",
     border: "none",
     borderRadius: "8px",
     cursor: "pointer"
   };
 
+  const avatarColor = '#d89f76ff';
+
   return (
-    <div
-      style={{
-        fontFamily: '"Microsoft JhengHei", sans-serif',
-        color: '#000',
-        backgroundImage: `url(${bgImg})`,
-        backgroundSize: 'cover',
-        minHeight: '100vh',
-        padding: '30px',
-        boxSizing: 'border-box'
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh',
+      fontFamily: '"Microsoft JhengHei", sans-serif',
+      color: '#000',
+      backgroundImage: `url(${bgImg})`,
+      backgroundSize: 'cover'
+    }}>
+
+      {/* 主內容區 */}
+      <div style={{ flex: 1, padding: '30px', boxSizing: 'border-box' }}>
+
+        {/* Header */}
+        <div style={{
           position: 'fixed',
           top: 0,
           left: 0,
@@ -125,107 +122,87 @@ export default function Dashboard() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
-        }}
-      >
-        <h1 style={{ margin: 0, color: '#8B4513', fontWeight: '700', fontSize: '2.5rem' }}>
-          AI 履歷健診
-        </h1>
-
-        {/* 登入者資訊 + 登出按鈕 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginRight: '40px' }}>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontWeight: '600' }}>
-              使用者：{username || "訪客登入"}
+        }}>
+          <h1 style={{ margin: 0, color: '#8B4513', fontWeight: '700', fontSize: '2.5rem' }}>AI 履歷健診</h1>
+          <div style={{ position: 'absolute', top: '20px', right: '80px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <div style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              backgroundColor: avatarColor,
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "bold",
+              fontSize: "18px"
+            }}>
+              {username ? username.charAt(0).toUpperCase() : "👤"}
             </div>
-            <div style={{ fontSize: '0.9rem', color: status === '在線' ? 'green' : 'gray' }}>
-              狀態：{status}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginRight: '40px' }}>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontWeight: '600' }}>{"訪客登入"}</div>
+                <div style={{ fontSize: '0.9rem', color: 'green' }}><b>狀態：{status}</b></div>
+              </div>
+              <button onClick={handleLogout} style={{
+                padding: "8px 16px",
+                background: "#dc3545",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer"
+              }}>登出</button>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            style={{
-              padding: "8px 16px",
-              background: "#dc3545",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer"
-            }}
-          >
-            登出
-          </button>
         </div>
-      </div>
 
-      {/* 主內容 */}
-      <div style={{ paddingTop: '100px', maxWidth: '820px', margin: '0 auto' }}>
-        <div
-          style={{
+        {/* 內容區 */}
+        <div style={{ paddingTop: '100px', maxWidth: '820px', margin: '0 auto' }}>
+          <div style={{
             background: '#fff',
             padding: '20px',
             borderRadius: '10px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
             color: '#000'
-          }}
-        >
-          <h2>上傳履歷</h2>
-          <FileUpload setResumeText={setResumeText} setResumeFile={handleFileUpload} />
-
-          <div style={{ marginTop: "18px" }}>
-            <button
-              onClick={() => setShowPreview(true)}
-              disabled={!pdfFile}
-              style={{
+          }}>
+            <h2>上傳履歷</h2>
+            <FileUpload setResumeText={setResumeText} setResumeFile={handleFileUpload} />
+            <div style={{ marginTop: "18px" }}>
+              <button onClick={() => setShowPreview(true)} disabled={!pdfFile} style={{
                 padding: "10px 20px",
-                background: pdfFile ? "#007bff" : "#9bb8ff",
+                background: pdfFile ? "#6F4E37" : "#cc8d60ff",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
                 cursor: pdfFile ? "pointer" : "not-allowed"
-              }}
-            >
-              預覽履歷
-            </button>
-
-            <button
-              onClick={handleSubmit}
-              disabled={!pdfFile}
-              style={{
+              }}>預覽履歷</button>
+              <button onClick={handleSubmit} disabled={!pdfFile} style={{
                 padding: "10px 20px",
                 marginLeft: "12px",
-                background: pdfFile ? "#28a745" : "#b7e0b4",
+                background: pdfFile ? "#6F4E37" : "#cc8d60ff",
                 color: "#fff",
                 border: "none",
                 borderRadius: "8px",
                 cursor: pdfFile ? "pointer" : "not-allowed"
-              }}
-            >
-              提交履歷
-            </button>
+              }}>提交履歷</button>
+            </div>
           </div>
-        </div>
 
-        {/* 頁面導航按鈕 */}
-        <div style={{ display:'flex', justifyContent:'center', gap:'30px', marginTop:'40px' }}>
-          <button onClick={()=>navigate('/')} style={navBtnStyle}>← 上一步</button>
-        </div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '40px' }}>
+            <button onClick={() => navigate('/')} style={navBtnStyle}>← 上一步</button>
+          </div>
 
-        {/* 預覽 Modal */}
-        {showPreview && pdfFile && (
-          <>
-            <div
-              style={{
+          {showPreview && pdfFile && (
+            <>
+              <div style={{
                 position: "fixed",
                 top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
                 background: "rgba(0,0,0,0.5)"
-              }}
-              onClick={() => setShowPreview(false)}
-            />
-            <div
-              style={{
+              }} onClick={() => setShowPreview(false)} />
+              <div style={{
                 position: "fixed",
                 top: "50%",
                 left: "50%",
@@ -238,13 +215,10 @@ export default function Dashboard() {
                 maxWidth: "1000px",
                 maxHeight: "90%",
                 overflow: "auto"
-              }}
-            >
-              <ResumePreview file={pdfFile} text={resumeText} style={{ width: "100%", height: "80vh" }} />
-              <div style={{ textAlign: "right" }}>
-                <button
-                  onClick={() => setShowPreview(false)}
-                  style={{
+              }}>
+                <ResumePreview file={pdfFile} text={resumeText} style={{ width: "100%", height: "80vh" }} />
+                <div style={{ textAlign: "right" }}>
+                  <button onClick={() => setShowPreview(false)} style={{
                     marginTop: "12px",
                     padding: "8px 14px",
                     background: "#dc3545",
@@ -252,15 +226,28 @@ export default function Dashboard() {
                     border: "none",
                     borderRadius: "6px",
                     cursor: "pointer"
-                  }}
-                >
-                  關閉
-                </button>
+                  }}>關閉</button>
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
+
+      {/* Sticky Footer */}
+      <footer style={{
+        padding: '10px 0',
+        textAlign: 'center',
+        fontSize: '0.9em',
+        color: '#040404ff',
+        width: '100%',
+        background: 'rgba(255,255,255,0.9)',
+        position: 'sticky',
+        bottom: 0,
+        boxShadow: '0 -2px 8px rgba(0,0,0,0.1)'
+      }}>
+       2025 程式驅動 AI 履歷健診團隊 版權所有 | 聯絡我們: contact@airesume.com
+      </footer>
     </div>
   );
 }
