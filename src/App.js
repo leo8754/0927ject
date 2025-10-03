@@ -13,7 +13,8 @@ import About from './About';
 import Table3 from './Table3';
 import Table4 from './Table4';
 import Dashboard from './dashboard';
-import ProfileForm from './components/ProfileForm';
+import Login from './Login';import ProfileForm from './components/ProfileForm';
+import Users from './users';
 
 function App() {
   const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
@@ -33,7 +34,9 @@ function App() {
         <Route path="/analysis1" element={<Analysis1 />} />
         <Route path="/table3" element={<Table3 />} />
         <Route path="/table4" element={<Table4 />} />
+        <Route path="/Login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/users" element={<Users />} />
       </Routes>
     </Router>
   );
