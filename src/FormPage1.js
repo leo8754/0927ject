@@ -19,7 +19,7 @@ export default function PersonalityFormPage() {
   };
 
   // ---------------- 顏色頭像 ----------------
-  const colors = ["#007bff", "#28a745", "#ffc107", "#17a2b8", "#6f42c1"];
+  const colors = ["#6F4E37"];
   const avatarColor = useMemo(() => {
     if (!username) return colors[0];
     const charCode = username.charCodeAt(0);
@@ -121,7 +121,7 @@ export default function PersonalityFormPage() {
 
   const navBtnStyle = {
     padding:'10px 20px',
-    background:'#007bff',
+    background:'#6F4E37',
     color:'#fff',
     border:'none',
     borderRadius:'8px',

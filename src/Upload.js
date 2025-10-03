@@ -21,7 +21,7 @@ export default function Dashboard() {
   }, []);
 
   // ---------------- 顏色頭像 ----------------
-  const colors = ["#007bff"];
+  const colors = ["#6F4E37"];
   const avatarColor = useMemo(() => {
     if (!username) return colors[0];
     const charCode = username.charCodeAt(0);
@@ -170,7 +170,7 @@ export default function Dashboard() {
 
         <input type="file" accept=".doc,.docx,.pdf" onChange={handleFileUpload} />
 
-        {loading && <p style={{ color: '#007bff', marginTop: '10px' }}>履歷處理中，請稍候...</p>}
+        {loading && <p style={{ color: '#6F4E37', marginTop: '10px' }}>履歷處理中，請稍候...</p>}
 
         <div style={{ marginTop: '12px' }}>
           <button
@@ -178,7 +178,7 @@ export default function Dashboard() {
             disabled={!pdfFile || loading}
             style={{
               padding: '10px 20px',
-              background: pdfFile ? '#ffc107' : '#e0d3a5',
+              background: pdfFile ? '#c26624ff' : '#70472aff',
               color: '#000',
               border: 'none',
               borderRadius: '8px',

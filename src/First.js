@@ -20,7 +20,7 @@ export default function Dashboard() {
   };
 
   // ---------------- 顏色頭像 ----------------
-  const colors = ["#007bff"];
+  const colors = ["#6F4E37"];
   const avatarColor = useMemo(() => {
     if (!username) return colors[0];
     const charCode = username.charCodeAt(0);
@@ -182,7 +182,7 @@ const btnStyle = {
 
 const navBtnStyle = {
   padding:'10px 20px',
-  background:'#007bff',
+  background:'#6F4E37',
   color:'#fff',
   border:'none',
   borderRadius:'8px',

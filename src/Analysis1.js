@@ -24,7 +24,7 @@ export default function Analysis() {
   // 共用按鈕樣式
   const navBtnStyle = {
     padding: "10px 20px",
-    background: "#1c0be0ff",
+    background: "#6F4E37",
     color: "#fff",
     border: "none",
     borderRadius: "8px",

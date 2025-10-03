@@ -30,7 +30,7 @@ export default function Dashboard() {
   };
 
   // 頭像顏色
-  const avatarColor = '#007bff';
+  const avatarColor = '#6F4E37';
 
   return (
     <div style={{
@@ -154,7 +154,7 @@ const btnStyle = {
 // Google 表單按鈕
 const formBtnStyle = {
   padding:'14px 32px',
-  background:'#007bff',
+  background:'#6F4E37',
   color:'#fff',
   border:'none',
   borderRadius:'10px',
@@ -168,7 +168,7 @@ const formBtnStyle = {
 // 導航按鈕
 const navBtnStyle = {
   padding:'10px 20px',
-  background:'#007bff',
+  background:'#6F4E37',
   color:'#fff',
   border:'none',
   borderRadius:'8px',
