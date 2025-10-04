@@ -178,7 +178,7 @@ export default function Dashboard() {
             disabled={!pdfFile || loading}
             style={{
               padding: '10px 20px',
-              background: pdfFile ? '#c26624ff' : '#70472aff',
+              background: pdfFile ? '#c26624ff' : '#d6874eff',
               color: '#000',
               border: 'none',
               borderRadius: '8px',

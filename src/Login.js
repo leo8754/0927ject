@@ -11,8 +11,8 @@ function Login() {
     e.preventDefault();
 
     // 固定帳號密碼
-    const ROOT_USERNAME = 'root';
-    const ROOT_PASSWORD = 'root456';
+    const ROOT_USERNAME = '0';
+    const ROOT_PASSWORD = '0';
 
     if (username === ROOT_USERNAME && password === ROOT_PASSWORD) {
       localStorage.setItem('loggedIn', 'true');

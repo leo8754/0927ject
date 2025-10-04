@@ -29,8 +29,6 @@ function About() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
-  
-
   // ===== 註冊功能 =====
   const handleRegister = () => {
     if (!regUsername || !regPassword || !regEmail || !regCode) {
@@ -116,12 +114,15 @@ function About() {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '20px 50px',
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: 'rgba(255,255,255,0.6)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
     position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 10
+    zIndex: 10,
+    borderBottom: '1px solid rgba(255,255,255,0.3)'
   };
 
   const navStyle = {
@@ -167,19 +168,23 @@ function About() {
     textAlign: 'left'
   };
 
+  // ===== 卡片玻璃風格 =====
   const cardStyle = {
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     borderRadius: '20px',
     padding: '30px 35px',
     marginBottom: '25px',
     boxShadow: '0 6px 18px rgba(0,0,0,0.1)',
-    transition: 'transform 0.3s, box-shadow 0.3s',
-    lineHeight: '1.7'
+    transition: 'transform 0.3s, boxShadow 0.3s',
+    lineHeight: '1.7',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.3)'
   };
 
   const cardHoverStyle = {
     transform: 'translateY(-5px)',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
+    boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
   };
 
   const teamContainerStyle = {
@@ -198,30 +203,23 @@ function About() {
 
   const teamCardHover = {
     transform: 'translateY(-5px)',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
+    boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
+  };
+
+  const h2Style = {
+    color: '#6F4E37'
   };
 
   const footerStyle = {
-    padding: '25px 0',
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    padding: '20px 0',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     textAlign: 'center',
     fontSize: '0.9em',
-    color: '#6F4E37',
+    color: '#171514ff',
     borderRadius: '10px',
-    boxShadow: '0 -4px 10px rgba(0,0,0,0.05)',
+    boxShadow: '0 -4px 10px rgba(255,255,255,0.3)',
+    backdropFilter: 'blur(6px)',
     marginTop: 'auto'
-  };
-
-  const modalStyle = {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    background: 'white',
-    padding: '30px',
-    borderRadius: '10px',
-    boxShadow: '0 5px 20px rgba(0,0,0,0.3)',
-    zIndex: 100
   };
 
   const modalOverlayStyle = {
@@ -230,7 +228,7 @@ function About() {
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.25)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -238,12 +236,25 @@ function About() {
   };
 
   const modalContentStyle = {
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     padding: '30px',
-    borderRadius: '10px',
+    borderRadius: '15px',
     width: '400px',
     textAlign: 'center',
-    backdropFilter: 'blur(6px)'
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
+    color: '#333'
+  };
+
+  const modalStyle = {
+    ...modalContentStyle,
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 1001
   };
 
   return (
@@ -258,7 +269,7 @@ function About() {
             <div onClick={() => navigate('/')}>首頁</div>
             <div onClick={() => scrollToRef(aboutwe)}>關於我們</div>
             <div onClick={() => scrollToRef(productRef)}>產品亮點</div>
-            <div onClick={() => scrollToRef(teamRef)}>關於團隊</div>
+            <div onClick={() => scrollToRef(teamRef)}>團隊介紹</div>
             <div onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
               聯絡我們
             </div>
@@ -273,8 +284,9 @@ function About() {
 
         <main style={mainStyle}>
           <div style={contentStyle}>
-            <h2 ref={aboutwe}>關於我們</h2>
-            <div style={cardStyle} onMouseEnter={(e) => Object.assign(e.currentTarget.style, cardHoverStyle)} onMouseLeave={(e) => Object.assign(e.currentTarget.style, cardStyle)}>
+            {/* 關於我們（卡片內） */}
+            <div style={cardStyle} onMouseEnter={e => Object.assign(e.currentTarget.style, cardHoverStyle)} onMouseLeave={e => Object.assign(e.currentTarget.style, cardStyle)}>
+              <h2 ref={aboutwe} style={h2Style}>關於我們</h2>
               <p style={{ fontSize: '1.1rem' }}>
                 最智慧的AI分析，最專業的履歷健診。
                 我們打造數據化、專業化的專業建議，協助求職者精準檢視履歷，
@@ -282,9 +294,10 @@ function About() {
               </p>
             </div>
 
-            <h2 ref={productRef}>產品亮點</h2>
-            {[ ...Array(4).keys() ].map((i) => (
-              <div key={i} style={cardStyle} onMouseEnter={(e) => Object.assign(e.currentTarget.style, cardHoverStyle)} onMouseLeave={(e) => Object.assign(e.currentTarget.style, cardStyle)}>
+            {/* 產品亮點 */}
+            <h2 ref={productRef} style={h2Style}>產品亮點</h2>
+            {[...Array(4).keys()].map(i => (
+              <div key={i} style={cardStyle} onMouseEnter={e => Object.assign(e.currentTarget.style, cardHoverStyle)} onMouseLeave={e => Object.assign(e.currentTarget.style, cardStyle)}>
                 <strong style={{ fontSize: '1.2rem', color: '#000' }}>
                   {["AI履歷評分","精準職缺匹配","專業優化建議","我們的願景"][i]}
                 </strong>
@@ -299,40 +312,38 @@ function About() {
               </div>
             ))}
 
-            <h2 ref={teamRef}>關於團隊</h2>
+            {/* 團隊介紹 */}
+            <h2 ref={teamRef} style={h2Style}>團隊介紹</h2>
             <div style={teamContainerStyle}>
               {[
                 { name: 'Leo', role: '前端工程師 / UI設計' },
-                { name: 'Vincent', role: '產品經理/後端工程師 / 資料分析' },
+                { name: 'Vincent', role: '產品經理 / 後端工程師 / 資料分析' },
                 { name: 'Alex', role: 'AI工程師 / 模型開發' },
-                { name: 'Michael', role: '整合' }
+                { name: 'Michael', role: '表單 / 整合' }
               ].map((member, idx) => (
-                <div key={idx} style={teamCardStyle} onMouseEnter={(e) => Object.assign(e.currentTarget.style, teamCardHover)} onMouseLeave={(e) => Object.assign(e.currentTarget.style, teamCardStyle)}>
+                <div key={idx} style={teamCardStyle} onMouseEnter={e => Object.assign(e.currentTarget.style, teamCardHover)} onMouseLeave={e => Object.assign(e.currentTarget.style, teamCardStyle)}>
                   <strong style={{ fontSize: '1.1rem' }}>{member.name}</strong>
                   <p style={{ marginTop: '5px', fontSize: '0.95rem' }}>{member.role}</p>
                 </div>
               ))}
             </div>
 
-            <footer style={footerStyle}>
-              2025 程式驅動 AI 履歷健診團隊 版權所有 | 聯絡我們: contact@airesume.com
-            </footer>
           </div>
         </main>
+
+        <footer style={footerStyle}>
+          2025 程式驅動 AI 履歷健診團隊 版權所有 | 聯絡我們: contact@airesume.com
+        </footer>
 
         {/* Login Modal */}
         {showLogin && (
           <div style={modalOverlayStyle} onClick={() => setShowLogin(false)}>
-            <div style={modalContentStyle} onClick={(e) => e.stopPropagation()}>
+            <div style={modalContentStyle} onClick={e => e.stopPropagation()}>
               <h2>登入</h2>
-              <input type="text" placeholder="使用者名稱" value={loginUsername} onChange={(e) => setLoginUsername(e.target.value)} style={{ width: '80%', padding: '8px', margin: '10px 0' }} />
-              <input type="password" placeholder="密碼" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} style={{ width: '80%', padding: '8px', margin: '10px 0' }} />
+              <input type="text" placeholder="使用者名稱" value={loginUsername} onChange={e => setLoginUsername(e.target.value)} style={{ width: '80%', padding: '8px', margin: '10px 0' }} />
+              <input type="password" placeholder="密碼" value={loginPassword} onChange={e => setLoginPassword(e.target.value)} style={{ width: '80%', padding: '8px', margin: '10px 0' }} />
               {loginErrorMsg && <p style={{ color: 'red' }}>{loginErrorMsg}</p>}
-              {loginSuccessMsg && (
-                <div style={{ backgroundColor: 'rgba(0, 128, 0, 0.1)', color: 'green', padding: '10px', margin: '10px auto', borderRadius: '6px', width: 'fit-content', fontWeight: 'bold' }}>
-                  {loginSuccessMsg}
-                </div>
-              )}
+              {loginSuccessMsg && <div style={{ backgroundColor: 'rgba(0, 128, 0, 0.1)', color: 'green', padding: '10px', margin: '10px auto', borderRadius: '6px', width: 'fit-content', fontWeight: 'bold' }}>{loginSuccessMsg}</div>}
               <button style={{ ...loginButton, width: '50%', marginTop: '10px' }} onClick={handleLogin}>登入</button>
               <button style={{ ...registerButton, width: '50%', marginTop: '10px' }} onClick={handleGuestLogin}>訪客登入</button>
             </div>
@@ -343,17 +354,18 @@ function About() {
         {showRegister && (
           <div style={modalStyle}>
             <h3>註冊</h3>
-            <input type="text" placeholder="使用者名稱" value={regUsername} onChange={(e) => setRegUsername(e.target.value)} /><br /><br />
-            <input type="password" placeholder="密碼" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} /><br /><br />
-            <input type="email" placeholder="Email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} />
+            <input type="text" placeholder="使用者名稱" value={regUsername} onChange={e => setRegUsername(e.target.value)} /><br /><br />
+            <input type="password" placeholder="密碼" value={regPassword} onChange={e => setRegPassword(e.target.value)} /><br /><br />
+            <input type="email" placeholder="Email" value={regEmail} onChange={e => setRegEmail(e.target.value)} />
             <button onClick={sendVerificationCode}>發送驗證碼</button><br /><br />
-            <input type="text" placeholder="驗證碼" value={regCode} onChange={(e) => setRegCode(e.target.value)} /><br /><br />
+            <input type="text" placeholder="驗證碼" value={regCode} onChange={e => setRegCode(e.target.value)} /><br /><br />
             <button onClick={handleRegister}>註冊</button>
             <button onClick={() => setShowRegister(false)}>關閉</button>
             {regErrorMsg && <p style={{ color: 'red' }}>{regErrorMsg}</p>}
             {regSuccessMsg && <p style={{ color: 'green' }}>{regSuccessMsg}</p>}
           </div>
         )}
+
       </div>
     </div>
   );

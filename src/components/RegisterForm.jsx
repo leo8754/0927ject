@@ -11,11 +11,11 @@ function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [selectedPosition, setSelectedPosition] = useState('');
+  //const [selectedPosition, setSelectedPosition] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   //const [sentCode, setSentCode] = useState('');
-  const [captchaInput, setCaptchaInput] = useState('');
-  const [simpleCaptcha, setSimpleCaptcha] = useState('');
+  //const [captchaInput, setCaptchaInput] = useState('');
+  //const [simpleCaptcha, setSimpleCaptcha] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -23,14 +23,14 @@ function RegisterForm() {
   const [registerMsg, setRegisterMsg] = useState('');
 
 
-  useEffect(() => {
-    generateCaptcha();
-  }, []);
-
-  const generateCaptcha = () => {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setSimpleCaptcha(code);
-  };
+//  useEffect(() => {
+//    generateCaptcha();
+//  }, []);
+//
+//  const generateCaptcha = () => {
+//    const code = Math.floor(100000 + Math.random() * 900000).toString();
+//    setSimpleCaptcha(code);
+//  };
 
   //Email認證
   const sendCode = async () => {
@@ -95,7 +95,7 @@ function RegisterForm() {
       setSelectedPosition('');
       setVerificationCode('');
       setCaptchaInput('');
-      generateCaptcha(); // 重新產生前端驗證碼
+      //generateCaptcha(); // 重新產生前端驗證碼
 
       setTimeout(() => navigate('/'), 2000);
     } catch (err) {
@@ -111,21 +111,12 @@ function RegisterForm() {
       <input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
       <input placeholder="密碼" type="password" value={password} onChange={e => setPassword(e.target.value)} />
       <input placeholder="手機號碼" value={phone} onChange={e => setPhone(e.target.value)} />
-      <PositionSelect value={selectedPosition} onChange={setSelectedPosition} />
+      
+      
 
 
 
-      {/* ✅ 純文字驗證碼區塊 */}
-      <div className="captcha-block" style={{ marginTop: '12px' }}>
-        <p>請輸入驗證碼：<strong>{simpleCaptcha}</strong></p>
-        <input
-          placeholder="請輸入上方驗證碼"
-          value={captchaInput}
-          onChange={e => setCaptchaInput(e.target.value)}
-          style={{ marginTop: '8px' }}
-        />
-        <button onClick={generateCaptcha} style={{ marginTop: '8px' }}>重新產生驗證碼</button>
-      </div>
+
 
       <div style={{ marginTop: '12px' }}>
       <input

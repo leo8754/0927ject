@@ -2,7 +2,7 @@
   "name": "resume-ai-demo",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://leo8754.github.io/AI_ject.github.io",
+  "homepage": "https://leo8754.github.io",
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",
     "buffer": "^6.0.3",

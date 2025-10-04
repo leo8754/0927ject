@@ -126,13 +126,14 @@ function Home() {
     transform: 'scale(1.02)'
   };
 
+  // ===== Modal Glass Style =====
   const modalOverlayStyle = {
     position: 'fixed',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.25)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -140,12 +141,34 @@ function Home() {
   };
 
   const modalContentStyle = {
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: 'rgba(255,255,255,0.25)',
     padding: '30px',
-    borderRadius: '10px',
+    borderRadius: '15px',
     width: '400px',
     textAlign: 'center',
-    backdropFilter: 'blur(6px)'
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+    border: '1px solid rgba(255,255,255,0.3)',
+    boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
+    transition: 'all 0.3s ease',
+    color: '#333'
+  };
+
+  const modalLoginButton = {
+    ...loginButton,
+    width: '50%',
+    marginTop: '10px',
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    border: '1px solid #6F4E37',
+    color: '#6F4E37'
+  };
+
+  const modalRegisterButton = {
+    ...registerButton,
+    width: '50%',
+    marginTop: '10px',
+    backgroundColor: 'rgba(111,78,55,0.8)',
+    color: 'white'
   };
 
   const footerStyle = {
@@ -153,7 +176,7 @@ function Home() {
     backgroundColor: 'rgba(255,255,255,0.3)',
     textAlign: 'center',
     fontSize: '0.9em',
-    color: '#6F4E37',
+    color: '#171514ff',
     borderRadius: '10px',
     boxShadow: '0 -4px 10px rgba(255,255,255,0.3)',
     backdropFilter: 'blur(6px)',
@@ -232,14 +255,10 @@ function Home() {
   return (
     <div style={containerStyle}>
       <div style={overlayStyle}></div>
-
       <div style={contentWrapper}>
         {/* Header */}
         <header style={headerStyle}>
-          <div
-            style={{ fontWeight: 'bold', fontSize: '2.5em', color: '#6F4E37', cursor: 'pointer' }}
-            onClick={() => navigate('/')}
-          >
+          <div style={{ fontWeight: 'bold', fontSize: '2.5em', color: '#6F4E37', cursor: 'pointer' }} onClick={() => navigate('/')}>
             AI 履歷健診
           </div>
           <nav style={navStyle}>
@@ -260,7 +279,7 @@ function Home() {
 
         {/* Main Content */}
         <div style={{ flex: 1, paddingTop: '120px' }}>
-          {/* Hero */}
+          {/* Hero Section */}
           <section style={{
             textAlign: 'center',
             padding: '60px 20px',
@@ -278,32 +297,17 @@ function Home() {
           </section>
 
           {/* 簡介 */}
-          <section
-            style={cardStyle}
-            onMouseEnter={e => Object.assign(e.currentTarget.style, cardHoverStyle)}
-            onMouseLeave={e => Object.assign(e.currentTarget.style, { transform: 'translateY(0)', boxShadow: '0 6px 15px rgba(0,0,0,0.1)' })}
-          >
+          <section style={cardStyle} onMouseEnter={e => Object.assign(e.currentTarget.style, cardHoverStyle)} onMouseLeave={e => Object.assign(e.currentTarget.style, { transform: 'translateY(0)', boxShadow: '0 6px 15px rgba(0,0,0,0.1)' })}>
             <h2 style={{ fontSize: '1.5rem', color: '#6F4E37', marginBottom: '15px' }}>簡介</h2>
-            <p>
-              <b>我們致力於打造最智能的履歷健診平台，結合人工智慧，
-              幫助使用者快速掌握履歷優缺點，提升錄取機率。</b>
-            </p>
+            <p><b>我們致力於打造最智能的履歷健診平台，結合人工智慧，幫助使用者快速掌握履歷優缺點，提升錄取機率。</b></p>
           </section>
 
           {/* 服務項目 */}
-          <section
-            id="services"
-            style={cardStyle}
-            onMouseEnter={e => Object.assign(e.currentTarget.style, cardHoverStyle)}
-            onMouseLeave={e => Object.assign(e.currentTarget.style, { transform: 'translateY(0)', boxShadow: '0 6px 15px #6F4E37' })}
-          >
+          <section id="services" style={cardStyle} onMouseEnter={e => Object.assign(e.currentTarget.style, cardHoverStyle)} onMouseLeave={e => Object.assign(e.currentTarget.style, { transform: 'translateY(0)', boxShadow: '0 6px 15px #6F4E37' })}>
             <h2 style={{ color: '#6F4E37' }}>服務項目</h2>
             <ul style={{ padding: 0, listStyle: 'none' }}>
               {['填寫個人基本資料表單', '填寫人格特質表單', '上傳履歷（支援 PDF 與 Word）', '利用 AI 分析履歷優缺點與改進建議'].map((item, idx) => (
-                <li key={idx}
-                    style={listCardStyle}
-                    onMouseEnter={e => Object.assign(e.currentTarget.style, listCardHover)}
-                    onMouseLeave={e => Object.assign(e.currentTarget.style, listCardStyle)}>
+                <li key={idx} style={listCardStyle} onMouseEnter={e => Object.assign(e.currentTarget.style, listCardHover)} onMouseLeave={e => Object.assign(e.currentTarget.style, listCardStyle)}>
                   📌 {item}
                 </li>
               ))}
@@ -311,23 +315,17 @@ function Home() {
           </section>
 
           {/* 最新消息 */}
-          <section
-            id="news"
-            style={cardStyle}
-            onMouseEnter={e => Object.assign(e.currentTarget.style, cardHoverStyle)}
-            onMouseLeave={e => Object.assign(e.currentTarget.style, { transform: 'translateY(0)', boxShadow: '0 6px 15px #6F4E37' })}
-          >
+          <section id="news" style={cardStyle} onMouseEnter={e => Object.assign(e.currentTarget.style, cardHoverStyle)} onMouseLeave={e => Object.assign(e.currentTarget.style, { transform: 'translateY(0)', boxShadow: '0 6px 15px #6F4E37' })}>
             <h2 style={{ color: '#6F4E37' }}>最新消息</h2>
             <ul style={{ padding: 0, listStyle: 'none' }}>
               {['優化 AI 履歷分析報告呈現方式', 'AI 履歷分析功能精準度提升'].map((news, idx) => (
-                <li key={idx} style={listCardStyle}
-                    onMouseEnter={e => Object.assign(e.currentTarget.style, listCardHover)}
-                    onMouseLeave={e => Object.assign(e.currentTarget.style, listCardStyle)}>
+                <li key={idx} style={listCardStyle} onMouseEnter={e => Object.assign(e.currentTarget.style, listCardHover)} onMouseLeave={e => Object.assign(e.currentTarget.style, listCardStyle)}>
                   📝 {news}
                 </li>
               ))}
             </ul>
           </section>
+
 
           {/* CTA */}
           <section style={{ textAlign: 'center', padding: '60px 20px' }}>
@@ -339,35 +337,68 @@ function Home() {
           </section>
         </div>
 
-        
-
-        {/* Login Modal */}
-        {showLoginModal && (
-          <div style={modalOverlayStyle} onClick={() => setShowLoginModal(false)}>
+        {/* Register Modal */}
+        {showRegisterModal && (
+          <div style={modalOverlayStyle} onClick={() => setShowRegisterModal(false)}>
             <div style={modalContentStyle} onClick={(e) => e.stopPropagation()}>
-              <h2>登入</h2>
+              <h2>註冊</h2>
               <input
                 type="text"
                 placeholder="使用者名稱"
-                value={loginUsername}
-                onChange={(e) => setLoginUsername(e.target.value)}
+                value={regUsername}
+                onChange={(e) => setRegUsername(e.target.value)}
                 style={{ width: '80%', padding: '8px', margin: '10px 0' }}
               />
               <input
                 type="password"
                 placeholder="密碼"
-                value={loginPassword} 
-                onChange={(e) => setLoginPassword(e.target.value)}
+                value={regPassword}
+                onChange={(e) => setRegPassword(e.target.value)}
                 style={{ width: '80%', padding: '8px', margin: '10px 0' }}
               />
+              <input
+                type="email"
+                placeholder="Email"
+                value={regEmail}
+                onChange={(e) => setRegEmail(e.target.value)}
+                style={{ width: '80%', padding: '8px', margin: '10px 0' }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0' }}>
+                <input
+                  type="text"
+                  placeholder="驗證碼"
+                  value={regCode}
+                  onChange={(e) => setRegCode(e.target.value)}
+                  style={{ width: '50%', padding: '8px', marginRight: '10px' }}
+                />
+                <button onClick={sendVerificationCode} style={{ ...registerButton, padding: '8px 12px' }}>
+                  發送驗證碼
+                </button>
+              </div>
+              {regErrorMsg && <p style={{ color: 'red' }}>{regErrorMsg}</p>}
+              {regSuccessMsg && <p style={{ color: 'green', fontWeight: 'bold' }}>{regSuccessMsg}</p>}
+              <button style={{ ...registerButton, width: '50%', marginTop: '10px' }} onClick={handleRegister}>
+                提交
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Login Modal */}
+        {showLoginModal && (
+          <div style={modalOverlayStyle} onClick={() => setShowLoginModal(false)}>
+            <div style={modalContentStyle} onClick={e => e.stopPropagation()}>
+              <h2>登入</h2>
+              <input type="text" placeholder="使用者名稱" value={loginUsername} onChange={(e) => setLoginUsername(e.target.value)} style={{ width: '80%', padding: '8px', margin: '10px 0' }} />
+              <input type="password" placeholder="密碼" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} style={{ width: '80%', padding: '8px', margin: '10px 0' }} />
               {loginErrorMsg && <p style={{ color: 'red' }}>{loginErrorMsg}</p>}
               {loginSuccessMsg && (
                 <div style={{ backgroundColor: 'rgba(0, 128, 0, 0.1)', color: 'green', padding: '10px', margin: '10px auto', borderRadius: '6px', width: 'fit-content', fontWeight: 'bold' }}>
                   {loginSuccessMsg}
                 </div>
               )}
-              <button style={{ ...loginButton, width: '50%', marginTop: '10px' }} onClick={handleLogin}>登入</button>
-              <button style={{ ...registerButton, width: '50%', marginTop: '10px' }} onClick={handleGuestLogin}>訪客登入</button>
+              <button style={modalLoginButton} onClick={handleLogin}>登入</button>
+              <button style={modalRegisterButton} onClick={handleGuestLogin}>訪客登入</button>
             </div>
           </div>
         )}

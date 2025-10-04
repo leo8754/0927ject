@@ -1,10 +1,25 @@
+// src/PersonalityFormPage.js
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import bgImg from './components/background.jpg';
 
 export default function PersonalityFormPage() {
   const navigate = useNavigate();
+  const location = useLocation(); // 監聽路由變化
   const [username, setUsername] = useState('');
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // ---------------- 自動回到頂部 ----------------
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  // ---------------- 監聽視窗大小 ----------------
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // ---------------- 讀取登入者 ----------------
   useEffect(() => {
@@ -102,16 +117,17 @@ export default function PersonalityFormPage() {
     navigate('/Upload');
   }
 
+  // ---------------- 樣式 ----------------
   const footerStyle = {
     padding: '20px 0',
     backgroundColor: 'rgba(255,255,255,0.9)',
     textAlign: 'center',
     fontSize: '0.9em',
-    color: '#6F4E37'
+    color: '#242322ff'
   };
 
   const btnStyle = {
-    padding:'8px 16px',
+    padding: windowWidth < 500 ? '8px 14px' : '10px 16px',
     background:'#dc3545',
     color:'#fff',
     border:'none',
@@ -120,12 +136,37 @@ export default function PersonalityFormPage() {
   };
 
   const navBtnStyle = {
-    padding:'10px 20px',
+    padding: windowWidth < 500 ? '10px 20px' : '12px 28px',
     background:'#6F4E37',
     color:'#fff',
     border:'none',
+    borderRadius:'10px',
+    cursor:'pointer',
+    fontWeight:'600',
+    transition:'all 0.3s ease',
+    fontSize: windowWidth < 500 ? '0.9rem' : '1rem'
+  };
+
+  const cardStyle = {
+    width:'90%',
+    maxWidth:'720px',
+    padding:'20px 25px',
+    background:'#fff',
+    borderRadius:'20px',
+    boxShadow:'0 12px 25px rgba(0,0,0,0.12)',
+    border:'1px solid #e0e0e0',
+    boxSizing:'border-box'
+  };
+
+  const inputStyle = {
+    width:'100%',
+    padding: windowWidth < 500 ? '8px' : '10px',
     borderRadius:'8px',
-    cursor:'pointer'
+    border:'1px solid #ccc',
+    outline:'none',
+    boxSizing:'border-box',
+    fontSize: windowWidth < 500 ? '0.9rem' : '1rem',
+    marginTop:'4px'
   };
 
   return (
@@ -142,21 +183,22 @@ export default function PersonalityFormPage() {
       <div style={{
         position: 'fixed', top: 0, left: 0, width: '100%',
         background: 'rgba(255,255,255,0.85)',
-        padding: '20px 40px',
+        padding: '20px 30px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         zIndex: 100,
         display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center'
       }}>
-        <h1 style={{ margin: 0, color: '#8B4513', fontWeight: '700', fontSize: '2.5rem' }}>AI 履歷健診</h1>
-        {/* 頭像 + 登出 */}
+        <h1 style={{ margin: 0, color: '#8B4513', fontWeight: '700', fontSize: windowWidth < 500 ? '2rem' : '2.5rem' }}>AI 履歷健診</h1>
+
+        {/* 右上角頭像 + 狀態 + 登出 */}
         <div style={{
-          position: 'absolute',
-          top: '20px',
-          right: '80px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '5px'
+          display:'flex',
+          alignItems:'center',
+          gap:'8px',
+          marginRight: windowWidth < 500 ? '10px' : '40px',
+          flexShrink:0
         }}>
           <div style={{
             width: "40px",
@@ -169,40 +211,40 @@ export default function PersonalityFormPage() {
             justifyContent: "center",
             fontWeight: "bold",
             fontSize: "18px",
-          }}>
-            {username ? username.charAt(0).toUpperCase() : "?"}
-          </div>
-          <div>
+          }}>{username ? username.charAt(0).toUpperCase() : "?"}</div>
+          <div style={{ textAlign:'left' }}>
             <div style={{ fontWeight: '600' }}>{username}</div>
             <div style={{ fontSize: '0.9rem', color: 'green' }}><b>狀態：在線</b></div>
           </div>
-          <button onClick={handleLogout} style={btnStyle}>登出</button>
+          <button onClick={handleLogout} style={{ ...btnStyle, whiteSpace:'nowrap' }}>登出</button>
         </div>
       </div>
 
-      {/* 中央內容區 */}
+      {/* 中央內容 */}
       <div style={{
         flex:1,
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
         justifyContent:'flex-start',
-        paddingTop:'60px',
+        paddingTop:'70px',
         paddingBottom:'20px',
-        gap:'10px'
+        gap:'15px'
       }}>
-        <h2 style={{ fontSize:'2.5rem', color:'#8B4513', textAlign:'center' }}>人格特質表單</h2>
+        <h2 style={{
+          fontSize: windowWidth < 500 ? '2rem' : '2.5rem',
+          color:'#8B4513',
+          textAlign:'center'
+        }}>人格特質表單</h2>
 
-        <div style={{
-          width:'100%',
-          maxWidth:'700px',
-          padding:'20px',
-          background:'#fff',
-          borderRadius:'16px',
-          boxShadow:'0 8px 20px rgba(0,0,0,0.15)',
-          border:'1px solid #e0e0e0'
-        }}>
-          <p style={{ marginBottom:'25px', textAlign:'center' }}>
+        <div style={cardStyle}>
+          <p style={{
+            marginBottom:'20px',
+            textAlign:'center',
+            color:'#555',
+            lineHeight:'1.6',
+            fontSize: windowWidth < 500 ? '0.9rem' : '1rem'
+          }}>
             填寫此表單能協助 AI 更準確分析您的優勢，並打造與您特質相符的履歷優化建議，提升求職競爭力。
           </p>
 
@@ -214,7 +256,7 @@ export default function PersonalityFormPage() {
                   name={`question${q.id}`}
                   value={formData[`question${q.id}`]}
                   onChange={handleChange}
-                  style={{ padding:'8px', width:'100%' }}
+                  style={inputStyle}
                 >
                   <option value="">請選擇</option>
                   {[...Array(10)].map((_, i) => (
@@ -234,11 +276,11 @@ export default function PersonalityFormPage() {
                 value={formData.responseContext}
                 onChange={handleChange}
                 placeholder="告訴我你的想法"
-                style={{ width:'100%', minHeight:'80px', padding:'8px' }}
+                style={{ width:'100%', minHeight:'80px', padding:'8px', borderRadius:'8px', border:'1px solid #ccc', fontSize: windowWidth < 500 ? '0.9rem' : '1rem' }}
               />
             </div>
 
-            <div style={{ display:'flex', gap:'20px', justifyContent:'center', marginTop:'10px' }}>
+            <div style={{ display:'flex', gap:'15px', justifyContent:'center', marginTop:'10px', flexWrap:'wrap' }}>
               <button type="submit" style={navBtnStyle} disabled={!isValid}>送出</button>
               <button type="button" onClick={resetForm} style={navBtnStyle}>重設</button>
             </div>
