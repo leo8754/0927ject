@@ -7,22 +7,35 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
 
+const jobTitlesByCategory = {
+  it: ['前端工程師','後端工程師','全端工程師','資料工程師','機器學習工程師','資料科學家','DevOps / SRE','行動應用工程師','嵌入式 / 韌體工程師','資安工程師','測試 / 品質工程師','雲端工程師','平台工程師','資料庫工程師','電腦視覺工程師','NLP / 語言模型工程師'],
+  marketing: ['數位行銷','內容行銷','成長駭客','品牌經理','社群經營'],
+  design: ['UI 設計師','UX 設計師','視覺設計師','產品設計師','動效設計師'],
+  education: ['教師','教學設計','補教講師','教育科技工程師'],
+  finance: ['財務分析師','風控 / 風險管理','會計','投資分析']
+};
+const genericTitles = ['工程師','專案經理','設計師','分析師','其他（自訂）'];
+
 export default function Dashboard() {
   const [resumeText, setResumeText] = useState('');
   const [resumeFile, setResumeFile] = useState(null);
   const [pdfFile, setPdfFile] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [username, setUsername] = useState('');
-  const [status, setStatus] = useState('在線');
+  const [status, setStatus] = useState('離線');
+  const [jobCategory, setJobCategory] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [customJobTitle, setCustomJobTitle] = useState('');
   const navigate = useNavigate();
+
+  const avatarColor = '#d89f76ff';
+  const currentTitles = jobCategory ? (jobTitlesByCategory[jobCategory] || genericTitles) : genericTitles;
 
   useEffect(() => {
     const savedUser = localStorage.getItem('username');
     if (savedUser) {
       setUsername(savedUser);
       setStatus('在線');
-    } else {
-      setStatus('離線');
     }
   }, []);
 
@@ -36,7 +49,6 @@ export default function Dashboard() {
     div.style.lineHeight = "1.5";
     div.style.fontSize = "14pt";
     div.style.width = "595px";
-    div.style.boxSizing = "border-box";
     div.style.position = "absolute";
     div.style.left = "-9999px";
     document.body.appendChild(div);
@@ -57,7 +69,7 @@ export default function Dashboard() {
   };
 
   const handleFileUpload = async (file, text) => {
-    setResumeText(text);
+    setResumeText(text || '');
     if (file.name.endsWith(".doc") || file.name.endsWith(".docx")) {
       await convertDocxToPDF(file);
       setResumeFile(null);
@@ -74,7 +86,7 @@ export default function Dashboard() {
       alert("請先上傳履歷！");
       return;
     }
-    navigate('/analysis1', { state: { resumeFile: pdfFile, resumeText } });
+    navigate('/analysis1', { state: { resumeFile: pdfFile, resumeText, jobCategory, jobTitle: jobTitle==='其他（自訂）'? customJobTitle : jobTitle } });
   };
 
   const handleLogout = () => {
@@ -83,17 +95,6 @@ export default function Dashboard() {
     setUsername('');
     navigate('/');
   };
-
-  const navBtnStyle = {
-    padding: "10px 20px",
-    background: "#6F4E37",
-    color: "#fff",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer"
-  };
-
-  const avatarColor = '#d89f76ff';
 
   return (
     <div style={{
@@ -105,136 +106,149 @@ export default function Dashboard() {
       backgroundImage: `url(${bgImg})`,
       backgroundSize: 'cover'
     }}>
+     {/* Header */}
+<div style={{
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  background: 'rgba(255,255,255,0.85)',
+  padding: '20px 40px', // header 左右 padding
+  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  zIndex: 100,
+  display: 'flex',
+  alignItems: 'center'
+}}>
+  {/* 標題 */}
+  <h1 style={{ margin: 0, color: '#8B4513', fontWeight: '700', fontSize: '2.5rem', flex: 1,textAlign: 'left' }}>
+    AI 履歷健診
+  </h1>
 
-      {/* 主內容區 */}
-      <div style={{ flex: 1, padding: '30px', boxSizing: 'border-box' }}>
+  {/* 右上角狀態 + 登出 */}
+  <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    justifyContent: 'flex-end',
+    minWidth: '250px',
+    flexShrink: 0,
+    marginRight: '40px' // 往左移，離右邊 40px
+  }}>
+    {/* 頭像 */}
+    <div style={{
+      width: "40px",
+      height: "40px",
+      borderRadius: "50%",
+      backgroundColor: avatarColor,
+      color: "white",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontWeight: "bold",
+      fontSize: "18px",
+      flexShrink: 0
+    }}>
+      {username ? username.charAt(0).toUpperCase() : "👤"}
+    </div>
 
-        {/* Header */}
+    {/* 名稱 + 狀態 */}
+    <div style={{ textAlign:'left' }}>
+        <div style={{ fontWeight:'600' }}>訪客登入</div>
+        <div style={{ fontSize:'0.9rem', color:'green' }}><b>狀態：在線</b></div>
+    </div>
+
+    {/* 登出按鈕 */}
+    <button 
+      onClick={handleLogout} 
+      style={{
+        padding: "8px 16px",
+        background: "#dc3545",
+        color: "#fff",
+        border: "none",
+        borderRadius: "6px",
+        cursor: "pointer",
+        flexShrink: 0,
+        marginLeft: '12px'
+      }}
+    >
+      登出
+    </button>
+  </div>
+</div>
+
+
+      {/* 內容卡片 */}
+      <div style={{ flex: 1, display:'flex', justifyContent:'center', paddingTop:'100px', paddingBottom:'40px' }}>
         <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
           width: '100%',
-          background: 'rgba(255,255,255,0.85)',
-          padding: '20px 40px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          zIndex: 100,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          maxWidth: '900px',
+          background: '#fff',
+          borderRadius: '20px',
+          padding: '30px',
+          boxShadow: '0 12px 25px rgba(0,0,0,0.12)',
+          boxSizing: 'border-box'
         }}>
-          <h1 style={{ margin: 0, color: '#8B4513', fontWeight: '700', fontSize: '2.5rem' }}>AI 履歷健診</h1>
-          <div style={{ position: 'absolute', top: '20px', right: '80px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <div style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              backgroundColor: avatarColor,
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "bold",
-              fontSize: "18px"
-            }}>
-              {username ? username.charAt(0).toUpperCase() : "👤"}
+          {/* 標題 */}
+          <h2 style={{ color: '#6F4E37', fontSize: '40px', textAlign: 'center', marginBottom: '25px' }}>
+            選擇職業資訊
+          </h2>
+
+          {/* 職業選擇 */}
+          <div style={{ display:'flex', gap:'40px', flexWrap:'wrap', justifyContent:'center', marginBottom:'30px' }}>
+            <div style={{ minWidth:'180px' }}>
+              <label style={{ display:'block', marginBottom:'8px', fontWeight:'600' }}>職業類別</label>
+              <select 
+                value={jobCategory} 
+                onChange={(e)=>{ setJobCategory(e.target.value); setJobTitle(''); setCustomJobTitle(''); }} 
+                style={{ width:'100%', padding:'8px', borderRadius:'6px', border:'1px solid #ccc', fontSize:'1rem' }}
+              >
+                <option value="">請選擇</option>
+                <option value="it">資訊科技 (IT)</option>
+                <option value="marketing">行銷</option>
+                <option value="design">設計</option>
+                <option value="education">教育</option>
+                <option value="finance">金融</option>
+                <option value="other">其他</option>
+              </select>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginRight: '40px' }}>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: '600' }}>{"訪客登入"}</div>
-                <div style={{ fontSize: '0.9rem', color: 'green' }}><b>狀態：{status}</b></div>
-              </div>
-              <button onClick={handleLogout} style={{
-                padding: "8px 16px",
-                background: "#dc3545",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer"
-              }}>登出</button>
+            <div style={{ minWidth:'180px' }}>
+              <label style={{ display:'block', marginBottom:'8px', fontWeight:'600' }}>職稱</label>
+              <select 
+                value={jobTitle} 
+                onChange={(e)=>{ setJobTitle(e.target.value); if(e.target.value!=='其他（自訂）') setCustomJobTitle(''); }} 
+                disabled={!jobCategory}
+                style={{ width:'100%', padding:'8px', borderRadius:'6px', border:'1px solid #ccc', fontSize:'1rem' }}
+              >
+                <option value="">{jobCategory ? '請選擇職稱' : '請先選擇職業類別'}</option>
+                {currentTitles.map(t => <option key={t} value={t}>{t}</option>)}
+                <option value="其他（自訂）">其他（自訂）</option>
+              </select>
+              {jobTitle==='其他（自訂）' && 
+                <input type="text" placeholder="請輸入職稱" value={customJobTitle} onChange={e=>setCustomJobTitle(e.target.value)} 
+                  style={{ marginTop:'8px', width:'100%', padding:'6px', borderRadius:'6px', border:'1px solid #ccc', textAlign:'center', fontSize:'1rem' }} />
+              }
             </div>
           </div>
-        </div>
 
-        {/* 內容區 */}
-        <div style={{ paddingTop: '100px', maxWidth: '820px', margin: '0 auto' }}>
-          <div style={{
-            background: '#fff',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-            color: '#000'
-          }}>
-            <h2>上傳履歷</h2>
+          {/* 顯示選擇結果 */}
+          <div style={{ marginBottom:'30px', padding:'12px', background:'#f9f9f9', border:'1px solid #ddd', borderRadius:'8px', fontSize:'1rem', fontWeight:'500', textAlign:'center' }}>
+            已選擇：類別：{jobCategory || '未選擇'} ／ 職稱：
+            {jobTitle==='其他（自訂）'? (customJobTitle || '尚未輸入') : jobTitle || '未選擇'}
+          </div>
+
+          {/* 上傳履歷 */}
+          <div style={{ textAlign:'center' }}>
+            <h3 style={{ color:'#6F4E37', fontSize: '40px', textAlign: 'center', marginBottom: '25px' }}>上傳履歷</h3>
             <FileUpload setResumeText={setResumeText} setResumeFile={handleFileUpload} />
-            <div style={{ marginTop: "18px" }}>
-              <button onClick={() => setShowPreview(true)} disabled={!pdfFile} style={{
-                padding: "10px 20px",
-                background: pdfFile ? "#6F4E37" : "#cc8d60ff",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: pdfFile ? "pointer" : "not-allowed"
-              }}>預覽履歷</button>
-              <button onClick={handleSubmit} disabled={!pdfFile} style={{
-                padding: "10px 20px",
-                marginLeft: "12px",
-                background: pdfFile ? "#6F4E37" : "#cc8d60ff",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: pdfFile ? "pointer" : "not-allowed"
-              }}>提交履歷</button>
+            <div style={{ marginTop: '18px' }}>
+              <button onClick={() => setShowPreview(true)} disabled={!pdfFile} style={{ padding: "10px 20px", background: pdfFile ? "#6F4E37" : "#cc8d60ff", color:"#fff", border:"none", borderRadius:"8px", cursor: pdfFile ? "pointer" : "not-allowed", marginRight:'12px' }}>預覽履歷</button>
+              <button onClick={handleSubmit} disabled={!pdfFile} style={{ padding: "10px 20px", background: pdfFile ? "#6F4E37" : "#cc8d60ff", color:"#fff", border:"none", borderRadius:"8px", cursor: pdfFile ? "pointer" : "not-allowed" }}>提交履歷</button>
             </div>
           </div>
-
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', marginTop: '40px' }}>
-            <button onClick={() => navigate('/')} style={navBtnStyle}>← 上一步</button>
-          </div>
-
-          {showPreview && pdfFile && (
-            <>
-              <div style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "rgba(0,0,0,0.5)"
-              }} onClick={() => setShowPreview(false)} />
-              <div style={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                background: "white",
-                padding: "20px",
-                borderRadius: "12px",
-                zIndex: 1000,
-                width: "90%",
-                maxWidth: "1000px",
-                maxHeight: "90%",
-                overflow: "auto"
-              }}>
-                <ResumePreview file={pdfFile} text={resumeText} style={{ width: "100%", height: "80vh" }} />
-                <div style={{ textAlign: "right" }}>
-                  <button onClick={() => setShowPreview(false)} style={{
-                    marginTop: "12px",
-                    padding: "8px 14px",
-                    background: "#dc3545",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer"
-                  }}>關閉</button>
-                </div>
-              </div>
-            </>
-          )}
         </div>
       </div>
 
-      {/* Sticky Footer */}
+      {/* Footer */}
       <footer style={{
         padding: '10px 0',
         textAlign: 'center',
@@ -242,12 +256,24 @@ export default function Dashboard() {
         color: '#040404ff',
         width: '100%',
         background: 'rgba(255,255,255,0.9)',
-        position: 'sticky',
-        bottom: 0,
+        marginTop: 'auto',
         boxShadow: '0 -2px 8px rgba(0,0,0,0.1)'
       }}>
        2025 程式驅動 AI 履歷健診團隊 版權所有 | 聯絡我們: contact@airesume.com
       </footer>
+
+      {/* PDF 預覽 */}
+      {showPreview && pdfFile && (
+        <>
+          <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)" }} onClick={() => setShowPreview(false)} />
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform:"translate(-50%, -50%)", background:"white", padding:"20px", borderRadius:"12px", zIndex:1000, width:"90%", maxWidth:"1000px", maxHeight:"90%", overflow:"auto" }}>
+            <ResumePreview file={pdfFile} text={resumeText} style={{ width: "100%", height: "80vh" }} />
+            <div style={{ textAlign:"right" }}>
+              <button onClick={() => setShowPreview(false)} style={{ marginTop:"12px", padding:"8px 14px", background:"#dc3545", color:"white", border:"none", borderRadius:"6px", cursor:"pointer" }}>關閉</button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
